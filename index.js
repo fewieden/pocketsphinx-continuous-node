@@ -29,9 +29,15 @@ function PocketSphinxContinuous(config) {
 
 PocketSphinxContinuous.prototype.start = function() {
   if (!this.isListening()) {
+    let mic = this.microphone;
+    // if name starts with number
+    if (typeof this.microphone === 'number' || this.microphone.match(/^\d/)) {
+      mic = `plughw:${this.microphone}`;
+    }
+
     this._psc = spawn('pocketsphinx_continuous', [
       '-adcdev',
-      `plughw:${this.microphone}`,
+      mic,
       '-inmic',
       'yes',
       '-lm',
